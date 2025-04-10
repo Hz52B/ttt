@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trình Hiển Thị Slide từ JSON</title>
+    <style>
+      /* Thêm CSS mới */
+      .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      .main-content {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .slide-list {
+        width: 200px;
+        overflow-y: auto;
+        border-right: 1px solid #ddd;
+        background: #f5f5f5;
+      }
+
+      .slide-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .upload-section {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: #f0f0f0;
+      }
+
+      .upload-section .btn-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      .slides-container {
+        flex: 1;
+        display: none;
+      }
+
+      .slide-viewer-container {
+        position: relative;
+        height: 100%;
+      }
+
+      #slide-viewer {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="upload-section">
+        <input
+          type="file"
+          id="json-upload"
+          accept=".json"
+          style="display: none"
+        />
+        <div class="btn-group">
+          <button class="upload-btn" id="upload-btn">Chọn File JSON</button>
+          <button
+            class="fullscreen-btn"
+            id="fullscreen-btn"
+            style="display: none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              width="24px"
+              height="24px"
+            >
+              <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+              <path
+                d="M187.7 153.7c-34 0-61.7 25.7-61.7 57.7 0 31.7 27.7 57.7 61.7 57.7s61.7-26 61.7-57.7c0-32-27.7-57.7-61.7-57.7zm143.4 0c-34 0-61.7 25.7-61.7 57.7 0 31.7 27.7 57.7 61.7 57.7 34.3 0 61.7-26 61.7-57.7 .1-32-27.4-57.7-61.7-57.7zm156.6 90l-6 4.3V49.7c0-27.4-20.6-49.7-46-49.7H76.6c-25.4 0-46 22.3-46 49.7V248c-2-1.4-4.3-2.9-6.3-4.3-15.1-10.6-25.1 4-16 17.7 18.3 22.6 53.1 50.3 106.3 72C58.3 525.1 252 555.7 248.9 457.5c0-.7 .3-56.6 .3-96.6 5.1 1.1 9.4 2.3 13.7 3.1 0 39.7 .3 92.8 .3 93.5-3.1 98.3 190.6 67.7 134.3-124 53.1-21.7 88-49.4 106.3-72 9.1-13.8-.9-28.3-16.1-17.8zm-30.5 19.2c-68.9 37.4-128.3 31.1-160.6 29.7-23.7-.9-32.6 9.1-33.7 24.9-10.3-7.7-18.6-15.5-20.3-17.1-5.1-5.4-13.7-8-27.1-7.7-31.7 1.1-89.7 7.4-157.4-28V72.3c0-34.9 8.9-45.7 40.6-45.7h317.7c30.3 0 40.9 12.9 40.9 45.7v190.6z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div id="file-name">Chưa có file nào được chọn</div>
+      </div>
+
+      <div id="json-error"></div>
+
+      <div id="no-file-message">Tải file json để bắt đầu</div>
+
+      <div class="main-content">
+        <div class="slide-list" id="slide-list"></div>
+
+        <div class="slide-content">
+          <div class="slides-container" style="display: none">
+            <div class="slide-viewer-container">
+              <div id="slide-viewer"></div>
+              <div class="tools-left">
+                <button id="prev-slide" class="nav-button left-button">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <path
+                      d="M24 43L42 24L24 5L24 17L6 17V31H24V43Z"
+                      fill="#fff"
+                      stroke="#111"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      transform="scale(-1,1) translate(-48,0)"
+                    ></path>
+                  </svg>
+                </button>
+
+                <button id="next-slide" class="nav-button right-button">
+                  <svg viewBox="0 0 48 48" fill="none">
+                    <path
+                      d="M24 43L42 24L24 5L24 17L6 17V31H24V43Z"
+                      fill="#fff"
+                      stroke="#111"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-counter" style="display: none">
+            <span id="current-slide">1</span> / <span id="total-slides">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
